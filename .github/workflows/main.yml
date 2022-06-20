@@ -33,3 +33,19 @@ jobs:
 
       - name: Sanity checks
         run: make sanity
+
+  integrations:
+    name: Integrations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install elastic-package
+        run: |
+          go install github.com/elastic/elastic-package@latest
+          ~/go/bin/elastic-package version
+
+      - name: Start the stack
+        run: ~/go/bin/elastic-package stack up -d
+
+      - name: Stop the stack
+        run: ~/go/bin/elastic-package stack down
