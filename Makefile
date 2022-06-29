@@ -9,7 +9,7 @@ prereq:
 	$(PYTHON) -m pip install -r requirements.txt
 
 lint:
-	$(PYTHON) -m flake8 --ignore D203 --max-line-length 120
+	$(PYTHON) -m flake8 --ignore D203 --max-line-length 120 --exclude assets/production,assets/staging,assets/snapshot,packages/production,packages/staging,packages/snapshot
 
 sanity:
 	$(PYTHON) -m bot meta --pedantic

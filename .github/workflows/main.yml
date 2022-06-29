@@ -34,6 +34,41 @@ jobs:
       - name: Sanity checks
         run: make sanity
 
+  plan:
+    name: Plan update
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package-storage-ref: ["production", "staging", "snapshot"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Checkout assets
+        run: |
+          git worktree add assets/${{ matrix.package-storage-ref }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: make prereq
+
+      - name: Checkout package-storage
+        uses: actions/checkout@v2
+        with:
+          repository: elastic/package-storage
+          ref: ${{ matrix.package-storage-ref }}
+          path: packages/${{ matrix.package-storage-ref }}
+
+      - name: Calculate diff
+        run: python3 -m bot diff
+
   integrations:
     name: Integrations
     runs-on: ubuntu-latest
