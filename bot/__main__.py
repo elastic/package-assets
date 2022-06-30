@@ -56,6 +56,10 @@ def diff():
         for package in remote_assets[base]:
             local_versions = set(local_assets[base][package])
             remote_versions = set(remote_assets[base][package])
+            both_versions = local_versions & remote_versions
+
+            min_version = min(both_versions, key=semver.VersionInfo.parse)
+            remote_versions = {v for v in remote_versions if semver.compare(v, min_version) >= 0}
 
             all_versions = local_versions | remote_versions
             only_local = local_versions - remote_versions
