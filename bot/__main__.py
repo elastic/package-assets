@@ -5,6 +5,7 @@
 import os
 import json
 import click
+import semver
 
 import assets
 import packages
@@ -64,7 +65,7 @@ def diff():
             click.echo(f"+++ local/{base}/{package}")
             click.echo(f"@@ -1,{len(only_remote)} +1,{len(only_local)} @@")
 
-            for version in sorted(all_versions):
+            for version in sorted(all_versions, key=semver.VersionInfo.parse):
                 if version in only_remote:
                     click.echo(f"-{version}")
                 elif version in only_local:
