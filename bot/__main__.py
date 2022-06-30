@@ -65,17 +65,18 @@ def diff():
             only_local = local_versions - remote_versions
             only_remote = remote_versions - local_versions
 
-            click.echo(f"--- remote/{base}/{package}")
-            click.echo(f"+++ local/{base}/{package}")
-            click.echo(f"@@ -1,{len(only_remote)} +1,{len(only_local)} @@")
+            if only_local or only_remote:
+                click.echo(f"--- remote/{base}/{package}")
+                click.echo(f"+++ local/{base}/{package}")
+                click.echo(f"@@ -1,{len(only_remote)} +1,{len(only_local)} @@")
 
-            for version in sorted(all_versions, key=semver.VersionInfo.parse):
-                if version in only_remote:
-                    click.echo(f"-{version}")
-                elif version in only_local:
-                    click.echo(f"+{version}")
-                else:
-                    click.echo(f" {version}")
+                for version in sorted(all_versions, key=semver.VersionInfo.parse):
+                    if version in only_remote:
+                        click.echo(f"-{version}")
+                    elif version in only_local:
+                        click.echo(f"+{version}")
+                    else:
+                        click.echo(f" {version}")
 
 
 if __name__ == "__main__":
