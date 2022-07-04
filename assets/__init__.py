@@ -18,10 +18,10 @@ def walk():
             break
 
 
-def get_manifest(base, package, version):
+def get_meta(base, package, version):
     import yaml
 
-    meta_filename = os.path.join(assets_dir, base, package, version, "manifest.yml")
+    meta_filename = os.path.join(assets_dir, base, package, version, "meta.yml")
     if os.path.exists(meta_filename):
         with open(meta_filename) as f:
             return yaml.safe_load(f)
