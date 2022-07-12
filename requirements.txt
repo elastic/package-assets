@@ -1,5 +1,7 @@
 click
 flake8
 requests
+requests_futures
 semver
+pygithub
 pyyaml

@@ -180,5 +180,50 @@ def update(ctx, bases):
             click.echo(p.stdout)
 
 
+@cli.command()
+@click.pass_context
+@click.argument("PACKAGE")
+@click.argument("OUTPUT_DIR")
+def download(ctx, package, output_dir):
+    """ Download the assets of a given package
+
+    PACKAGE whose assets are to be downloaded - es: endpoint/8.2.3
+    OUTPUT_DIR directory where the assets are downloaded to
+    """
+
+    from requests_futures.sessions import FuturesSession
+    from concurrent.futures import as_completed
+    from github import Github
+
+    github = Github(os.getenv("GITHUB_TOKEN_ASSETS") or None)
+    repo = github.get_repo("elastic/package-assets")
+
+    session = FuturesSession()
+    futures = []
+    for entry in assets.get_remote_entries(repo, package):
+        future = session.get(entry.download_url)
+        future.entry = entry
+        futures.append(future)
+
+    count = 0
+    for future in as_completed(futures):
+        res = future.result()
+        res.raise_for_status()
+
+        filename = future.entry.path.replace(package, output_dir)
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "wb") as f:
+            f.write(res.content)
+
+        click.echo(filename)
+        count += 1
+
+    if count:
+        click.echo(f"Saved {count} assets")
+    else:
+        click.echo(f"Not found: {package}", err=True)
+        ctx.exit(1)
+
+
 if __name__ == "__main__":
     cli(prog_name="bot")

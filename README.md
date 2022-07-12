@@ -53,9 +53,10 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  meta    Print the meta info of all the stored assets
-  plan    Print the update plan in a diff-like format
-  update  Perform the assets updates
+  download  Download the assets of a given package
+  meta      Print the meta info of all the stored assets
+  plan      Print the update plan in a diff-like format
+  update    Perform the assets updates
 ```
 
 
