@@ -9,16 +9,6 @@ import assets
 
 
 @pytest.fixture
-def tmpdir():
-    from tempfile import mkdtemp
-    from shutil import rmtree
-
-    d = mkdtemp()
-    yield d
-    rmtree(d)
-
-
-@pytest.fixture
 def repo():
     from github import Github
 
@@ -52,6 +42,6 @@ def test_get_remote_assets_invalid(invalid_package, repo):
     assert str(exc.value) == f"Package not found: {invalid_package}"
 
 
-def test_download_assets(package, entries, tmpdir):
-    count = assets.download_assets(package, entries, tmpdir)
-    assert count == 60
+def test_download_assets(entries):
+    contents = assets.download_assets(entries)
+    assert len(list(contents)) == 60
