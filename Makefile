@@ -21,3 +21,5 @@ lint:
 
 sanity:
 	$(PYTHON) -m bot meta --pedantic
+	$(PYTHON) -m bot plan
+	$(PYTHON) -m bot download endpoint/1.5.0 test-download; rm -rf test-download
