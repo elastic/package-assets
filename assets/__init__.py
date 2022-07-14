@@ -28,7 +28,7 @@ def get_meta(base, package, version):
             return yaml.safe_load(f)
 
 
-def get_remote_entries(repo, package):
+def get_remote_entries(package, repo):
     from github import GithubException
 
     for branch in bases:
@@ -44,3 +44,27 @@ def get_remote_entries(repo, package):
             else:
                 yield content
         break
+
+
+def download_remote_entries(package, entries, outdir):
+    from requests_futures.sessions import FuturesSession
+    from concurrent.futures import as_completed
+
+    session = FuturesSession()
+    futures = []
+
+    for entry in entries:
+        future = session.get(entry.download_url)
+        future.entry = entry
+        futures.append(future)
+
+    for future in as_completed(futures):
+        res = future.result()
+        res.raise_for_status()
+
+        filename = future.entry.path.replace(package, outdir)
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "wb") as f:
+            f.write(res.content)
+
+    return len(futures)
