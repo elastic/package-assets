@@ -195,8 +195,8 @@ def download(ctx, package, output_dir):
 
     github = Github(os.getenv("GITHUB_TOKEN_ASSETS") or None)
     repo = github.get_repo("elastic/package-assets")
-    entries = assets.get_remote_entries(package, repo)
-    count = assets.download_remote_entries(package, entries, output_dir)
+    entries = assets.get_remote_assets(package, repo)
+    count = assets.download_assets(package, entries, output_dir)
 
     if count:
         click.echo(f"Saved {count} assets")
