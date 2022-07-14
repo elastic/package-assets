@@ -31,6 +31,9 @@ jobs:
       - name: Lint code
         run: make lint
 
+      - name: Run tests
+        run: make tests
+
       - name: Sanity checks
         run: make sanity
 
