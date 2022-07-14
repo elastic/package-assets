@@ -191,32 +191,12 @@ def download(ctx, package, output_dir):
     OUTPUT_DIR directory where the assets are downloaded to
     """
 
-    from requests_futures.sessions import FuturesSession
-    from concurrent.futures import as_completed
     from github import Github
 
     github = Github(os.getenv("GITHUB_TOKEN_ASSETS") or None)
     repo = github.get_repo("elastic/package-assets")
-
-    session = FuturesSession()
-    futures = []
-    for entry in assets.get_remote_entries(repo, package):
-        future = session.get(entry.download_url)
-        future.entry = entry
-        futures.append(future)
-
-    count = 0
-    for future in as_completed(futures):
-        res = future.result()
-        res.raise_for_status()
-
-        filename = future.entry.path.replace(package, output_dir)
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        with open(filename, "wb") as f:
-            f.write(res.content)
-
-        click.echo(filename)
-        count += 1
+    entries = assets.get_remote_entries(package, repo)
+    count = assets.download_remote_entries(package, entries, output_dir)
 
     if count:
         click.echo(f"Saved {count} assets")
