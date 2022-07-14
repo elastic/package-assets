@@ -32,6 +32,11 @@ def package():
 
 
 @pytest.fixture
+def invalid_package():
+    return "invalid/a.b.c"
+
+
+@pytest.fixture
 def entries(package, repo):
     return assets.get_remote_assets(package, repo)
 
@@ -39,6 +44,12 @@ def entries(package, repo):
 def test_get_remote_assets(package, repo):
     entries = assets.get_remote_assets(package, repo)
     assert len(list(entries)) == 60
+
+
+def test_get_remote_assets_invalid(invalid_package, repo):
+    with pytest.raises(ValueError) as exc:
+        _ = list(assets.get_remote_assets(invalid_package, repo))
+    assert str(exc.value) == f"Package not found: {invalid_package}"
 
 
 def test_download_assets(package, entries, tmpdir):
