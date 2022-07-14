@@ -99,4 +99,5 @@ def download_assets(package, entries, outdir):
         with open(filename, "wb") as f:
             f.write(res.content)
 
+    session.close()
     return len(futures)
