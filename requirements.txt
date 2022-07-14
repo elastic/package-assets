@@ -1,8 +1,9 @@
 build
 click
 flake8
+pygithub
+pytest
+pyyaml
 requests
 requests_futures
 semver
-pygithub
-pyyaml
