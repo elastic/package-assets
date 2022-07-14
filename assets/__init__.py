@@ -66,7 +66,9 @@ def get_remote_assets(package, repo):
                 contents += repo.get_contents(content.path, ref=branch)
             else:
                 yield content
-        break
+        return
+
+    raise ValueError(f"Package not found: {package}")
 
 
 def download_assets(package, entries, outdir):
