@@ -17,6 +17,11 @@ def repo():
 
 
 @pytest.fixture
+def path():
+    return os.path.join(os.path.dirname(__file__), "..", "assets", "production")
+
+
+@pytest.fixture
 def package():
     return "endpoint/8.3.0"
 
@@ -29,6 +34,11 @@ def invalid_package():
 @pytest.fixture
 def entries(package, repo):
     return assets.get_remote_assets(package, repo)
+
+
+def test_get_local_assets(package, path):
+    contents = assets.get_local_assets(package, path)
+    assert len(list(contents)) == 60
 
 
 def test_get_remote_assets(package, repo):
