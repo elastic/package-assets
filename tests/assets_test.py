@@ -41,6 +41,12 @@ def test_get_local_assets(package, path):
     assert len(list(contents)) == 60
 
 
+def test_get_local_assets_invalid(invalid_package, path):
+    with pytest.raises(ValueError) as exc:
+        _ = list(assets.get_local_assets(invalid_package, path))
+    assert str(exc.value) == f"Package not found: {invalid_package}"
+
+
 def test_get_remote_assets(package, repo):
     entries = assets.get_remote_assets(package, repo)
     assert len(list(entries)) == 60
