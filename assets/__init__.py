@@ -50,6 +50,8 @@ def get_local_assets(package, path):
     saved_cwd = os.getcwd()
     os.chdir(path)
     try:
+        if not os.path.exists(package):
+            raise ValueError(f"Package not found: {package}")
         for root, _, files in os.walk(package):
             for file in files:
                 with open(os.path.join(root, file), "rb") as f:
