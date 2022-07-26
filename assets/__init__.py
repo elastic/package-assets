@@ -72,16 +72,16 @@ def get_remote_assets(package, repo):
 
     for branch in bases:
         try:
-            contents = repo.get_contents(package, ref=branch)
+            entries = repo.get_contents(package, ref=branch)
         except GithubException:
             continue
 
-        while contents:
-            content = contents.pop(0)
-            if content.type == "dir":
-                contents += repo.get_contents(content.path, ref=branch)
+        while entries:
+            entry = entries.pop(0)
+            if entry.type == "dir":
+                entries += repo.get_contents(entry.path, ref=branch)
             else:
-                yield content
+                yield entry
         return
 
     raise ValueError(f"Package not found: {package}")
