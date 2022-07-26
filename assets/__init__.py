@@ -3,7 +3,6 @@
 # you may not use this file except in compliance with the Elastic License.
 
 import os
-from types import SimpleNamespace
 
 assets_dir = os.path.dirname(__file__)
 bases = ("production", "staging", "snapshot")
@@ -55,7 +54,7 @@ def get_local_assets(package, path):
         for root, _, files in os.walk(package):
             for file in files:
                 with open(os.path.join(root, file), "rb") as f:
-                    yield SimpleNamespace(path=f.name), f.read()
+                    yield f.name, f.read()
     finally:
         os.chdir(saved_cwd)
 
@@ -110,6 +109,6 @@ def download_assets(entries):
     for future in as_completed(futures):
         res = future.result()
         res.raise_for_status()
-        yield future.entry, res.content
+        yield future.entry.path, res.content
 
     session.close()
