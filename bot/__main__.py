@@ -13,6 +13,8 @@ import requests
 import assets
 import packages
 
+config = {}
+
 
 def get_stack_version():
     es_url = os.getenv("ELASTIC_PACKAGE_ELASTICSEARCH_HOST")
@@ -28,32 +30,32 @@ def get_stack_version():
 
 
 def make_plan(bases):
+    tracked_packages = config.get("tracked-packages", {})
+
     local_assets = {}
     for base, package, version in assets.walk():
-        if not bases or base in bases:
-            meta = assets.get_meta(base, package, version)
-            if meta is not None:
-                local_assets.setdefault(base, {}).setdefault(package, {}).setdefault(version, meta)
+        meta = assets.get_meta(base, package, version)
+        if meta is not None:
+            local_assets.setdefault(base, {}).setdefault(package, {}).setdefault(version, meta)
 
     remote_assets = {}
-    for base in local_assets:
-        base_dir = os.path.join(packages.packages_dir, base, "packages")
-        if os.path.exists(base_dir):
-            for package in local_assets[base]:
-                package_dir = os.path.join(base_dir, package)
-                if os.path.exists(package_dir):
-                    versions = remote_assets.setdefault(base, {}).setdefault(package, {})
-                    for version in os.listdir(package_dir):
-                        versions[version] = packages.get_manifest(base, package, version)
+    for package in tracked_packages:
+        for base in tracked_packages[package]["branches"]:
+            package_dir = os.path.join(packages.packages_dir, base, "packages", package)
+            if os.path.exists(package_dir):
+                for version in os.listdir(package_dir):
+                    meta = packages.get_manifest(base, package, version)
+                    if meta is not None:
+                        remote_assets.setdefault(base, {}).setdefault(package, {}).setdefault(version, meta)
 
     for base in remote_assets:
         for package in remote_assets[base]:
-            local_versions = set(local_assets[base][package])
+            local_versions = set(local_assets.get(base, {}).get(package, {}))
             remote_versions = set(remote_assets[base][package])
-            both_versions = local_versions & remote_versions
 
-            min_version = min(both_versions, key=semver.VersionInfo.parse)
-            remote_versions = {v for v in remote_versions if semver.compare(v, min_version) >= 0}
+            min_version = tracked_packages[package].get("minimum-version", 0)
+            if min_version:
+                remote_versions = {v for v in remote_versions if v >= min_version or v in local_versions}
 
             all_versions = local_versions | remote_versions
             only_local = local_versions - remote_versions
@@ -63,8 +65,18 @@ def make_plan(bases):
 
 
 @click.group()
-def cli():
-    pass
+@click.pass_context
+@click.option("--config", "conf_file", default="config.yaml", show_default=True, help="Path to the configuration file.")
+def cli(ctx, conf_file):
+    from .config import load
+
+    try:
+        global config
+        if os.path.exists(conf_file):
+            config = load(conf_file)
+    except Exception as e:
+        click.echo(f"Configuration error: {e}", err=True)
+        ctx.exit(1)
 
 
 @cli.command()
