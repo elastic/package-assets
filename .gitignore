@@ -3,9 +3,6 @@
 assets/production
 assets/snapshot
 assets/staging
-packages/production
-packages/snapshot
-packages/staging
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
