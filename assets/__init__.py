@@ -3,8 +3,9 @@
 # you may not use this file except in compliance with the Elastic License.
 
 import os
+from pathlib import Path
 
-assets_dir = os.path.dirname(__file__)
+assets_dir = Path(__file__).parent
 bases = ("production", "staging", "snapshot")
 
 
@@ -16,11 +17,11 @@ def walk():
     """
 
     for base in bases:
-        for asset_base, packages, _ in os.walk(os.path.join(assets_dir, base)):
+        for asset_base, packages, _ in os.walk(assets_dir / base):
             for package in packages:
                 if package.startswith("."):
                     continue
-                for _, versions, _ in os.walk(os.path.join(asset_base, package)):
+                for _, versions, _ in os.walk(Path(asset_base) / package):
                     for version in versions:
                         yield base, package, version
                     break
@@ -39,8 +40,8 @@ def get_meta(base, package, version):
 
     import yaml
 
-    meta_filename = os.path.join(assets_dir, base, package, version, "meta.yml")
-    if os.path.exists(meta_filename):
+    meta_filename = assets_dir / base / package / version / "meta.yml"
+    if meta_filename.exists():
         with open(meta_filename) as f:
             return yaml.safe_load(f)
 
@@ -57,11 +58,11 @@ def get_local_assets(package, path):
     saved_cwd = os.getcwd()
     os.chdir(path)
     try:
-        if not os.path.exists(package):
+        if not Path(package).exists():
             raise ValueError(f"Package not found: {package}")
         for root, _, files in os.walk(package):
             for file in files:
-                with open(os.path.join(root, file), "rb") as f:
+                with open(Path(root) / file, "rb") as f:
                     yield f.name, f.read()
     finally:
         os.chdir(saved_cwd)

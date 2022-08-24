@@ -9,6 +9,7 @@ import click
 import semver
 import subprocess
 import requests
+from pathlib import Path
 
 import assets
 import packages
@@ -41,8 +42,8 @@ def make_plan(bases):
     remote_assets = {}
     for package in tracked_packages:
         for base in tracked_packages[package]["branches"]:
-            package_dir = os.path.join(packages.packages_dir, base, "packages", package)
-            if os.path.exists(package_dir):
+            package_dir = packages.packages_dir / base / "packages" / package
+            if package_dir.exists():
                 for version in os.listdir(package_dir):
                     meta = packages.get_manifest(base, package, version)
                     if meta is not None:
@@ -72,7 +73,7 @@ def cli(ctx, conf_file):
 
     try:
         global config
-        if os.path.exists(conf_file):
+        if Path(conf_file).exists():
             config = load(conf_file)
     except Exception as e:
         click.echo(f"Configuration error: {e}", err=True)
@@ -140,7 +141,7 @@ def update(ctx, bases):
 
     for (base, package, all_versions, only_local, only_remote) in make_plan(bases):
         for version in sorted(only_remote, key=semver.VersionInfo.parse):
-            package_dir = os.path.join(packages.packages_dir, base, "packages", package, version)
+            package_dir = packages.packages_dir / base / "packages" / package / version
             click.echo(f"install package from {package_dir}")
             args = ["elastic-package", "install", package]
             p = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=package_dir)
@@ -150,7 +151,7 @@ def update(ctx, bases):
                 continue
             click.echo(p.stdout)
 
-            asset_dir = os.path.join(assets.assets_dir, base, package, version)
+            asset_dir = assets.assets_dir / base / package / version
             click.echo(f"export assets to {asset_dir}")
             args = ["elastic-package", "dump", "installed-objects", "--package", package, "--output", asset_dir]
             p = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=assets.assets_dir)
@@ -161,7 +162,7 @@ def update(ctx, bases):
             click.echo(p.stdout)
 
             click.echo("copy manifest")
-            args = ["cp", "-v", os.path.join(package_dir, "manifest.yml"), asset_dir]
+            args = ["cp", "-v", package_dir / "manifest.yml", asset_dir]
             p = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=asset_dir)
             if p.returncode:
                 click.echo(p.stdout, err=True)
@@ -170,7 +171,7 @@ def update(ctx, bases):
             click.echo(p.stdout)
 
             click.echo("write meta")
-            with open(os.path.join(asset_dir, "meta.yml"), "w+") as f:
+            with open(asset_dir / "meta.yml", "w+") as f:
                 yaml.dump(meta, f)
 
             click.echo(f"git: add {asset_dir}...")
@@ -213,7 +214,7 @@ def download(ctx, package, output_dir):
     for entry, content in assets.download_assets(entries):
         filename = entry.path.replace(package, output_dir)
 
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
         with open(filename, "wb") as f:
             f.write(content)
 

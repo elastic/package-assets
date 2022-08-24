@@ -4,6 +4,7 @@
 
 import os
 import pytest
+from pathlib import Path
 
 import assets
 
@@ -18,7 +19,7 @@ def repo():
 
 @pytest.fixture
 def path():
-    return os.path.join(os.path.dirname(__file__), "..", "assets", "production")
+    return Path(__file__).parent.parent / "assets" / "production"
 
 
 @pytest.fixture
