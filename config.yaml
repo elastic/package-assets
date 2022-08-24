@@ -1,0 +1,3 @@
+tracked-packages:
+  - endpoint:
+      minimum-version: 8
