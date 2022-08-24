@@ -5,11 +5,13 @@
 import os
 from pathlib import Path
 
+import assets
+
 packages_dir = Path(__file__).parent
 
 
 def walk():
-    for branch in ("production", "staging", "snapshot"):
+    for branch in assets.branches:
         for asset_branch, packages, _ in os.walk(packages_dir / branch / "packages"):
             for package in packages:
                 for _, versions, _ in os.walk(Path(asset_branch) / package):

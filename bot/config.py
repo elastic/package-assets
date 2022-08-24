@@ -5,6 +5,8 @@
 import yaml
 import semver
 
+import assets
+
 
 def flatten(tracked_packages):
     if type(tracked_packages) is not list:
@@ -27,7 +29,7 @@ def validate(config):
     for name, package in tracked_packages.items():
         branches = package.get("branches", None)
         if not branches:
-            package["branches"] = ["production", "staging", "snapshot"]
+            package["branches"] = assets.branches
         elif type(branches) == str:
             package["branches"] = [x.strip() for x in branches.split(",")]
 
