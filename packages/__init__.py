@@ -3,25 +3,28 @@
 # you may not use this file except in compliance with the Elastic License.
 
 import os
+from pathlib import Path
 
-packages_dir = os.path.dirname(__file__)
+import assets
+
+packages_dir = Path(__file__).parent
 
 
 def walk():
-    for base in ("production", "staging", "snapshot"):
-        for asset_base, packages, _ in os.walk(os.path.join(packages_dir, base, "packages")):
+    for branch in assets.branches:
+        for asset_branch, packages, _ in os.walk(packages_dir / branch / "packages"):
             for package in packages:
-                for _, versions, _ in os.walk(os.path.join(asset_base, package)):
+                for _, versions, _ in os.walk(Path(asset_branch) / package):
                     for version in versions:
-                        yield base, package, version
+                        yield branch, package, version
                     break
             break
 
 
-def get_manifest(base, package, version):
+def get_manifest(branch, package, version):
     import yaml
 
-    meta_filename = os.path.join(packages_dir, base, "packages", package, version, "manifest.yml")
-    if os.path.exists(meta_filename):
+    meta_filename = packages_dir / branch / "packages" / package / version / "manifest.yml"
+    if meta_filename.exists():
         with open(meta_filename) as f:
             return yaml.safe_load(f)

@@ -3,35 +3,36 @@
 # you may not use this file except in compliance with the Elastic License.
 
 import os
+from pathlib import Path
 
-assets_dir = os.path.dirname(__file__)
-bases = ("production", "staging", "snapshot")
+assets_dir = Path(__file__).parent
+branches = ("production", "staging", "snapshot")
 
 
 def walk():
     """
     Traverse all the local assets.
 
-    :return: generator yielding (base, package, version) of all the local assets
+    :return: generator yielding (branch, package, version) of all the local assets
     """
 
-    for base in bases:
-        for asset_base, packages, _ in os.walk(os.path.join(assets_dir, base)):
+    for branch in branches:
+        for asset_branch, packages, _ in os.walk(assets_dir / branch):
             for package in packages:
                 if package.startswith("."):
                     continue
-                for _, versions, _ in os.walk(os.path.join(asset_base, package)):
+                for _, versions, _ in os.walk(Path(asset_branch) / package):
                     for version in versions:
-                        yield base, package, version
+                        yield branch, package, version
                     break
             break
 
 
-def get_meta(base, package, version):
+def get_meta(branch, package, version):
     """
     Get the meta-data of a local asset.
 
-    :param base: one among 'production', 'staging', 'snapshot'
+    :param branch: one among 'production', 'staging', 'snapshot'
     :param package: package name, ex. 'endpoint'
     :param version: package version, ex. '8.3.0'
     :return: dictionary containing the meta-data
@@ -39,8 +40,8 @@ def get_meta(base, package, version):
 
     import yaml
 
-    meta_filename = os.path.join(assets_dir, base, package, version, "meta.yml")
-    if os.path.exists(meta_filename):
+    meta_filename = assets_dir / branch / package / version / "meta.yml"
+    if meta_filename.exists():
         with open(meta_filename) as f:
             return yaml.safe_load(f)
 
@@ -57,11 +58,11 @@ def get_local_assets(package, path):
     saved_cwd = os.getcwd()
     os.chdir(path)
     try:
-        if not os.path.exists(package):
+        if not Path(package).exists():
             raise ValueError(f"Package not found: {package}")
         for root, _, files in os.walk(package):
             for file in files:
-                with open(os.path.join(root, file), "rb") as f:
+                with open(Path(root) / file, "rb") as f:
                     yield f.name, f.read()
     finally:
         os.chdir(saved_cwd)
@@ -78,7 +79,7 @@ def get_remote_assets(package, repo):
 
     from github import GithubException
 
-    for branch in bases:
+    for branch in branches:
         try:
             entries = repo.get_contents(package, ref=branch)
         except GithubException:

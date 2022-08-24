@@ -28,7 +28,7 @@ The CI flow manages the preparation of the `assets/` subdir but the casual user 
 
 Packages reside in the external repository [package-storage](https://github.com/elastic/package-storage), in the respective `production`, `staging`, and `snapshot` branches. The automation expects them in the `package/` subdir, similarily to the assets.
 
-Git submodules are pre-defined, the casual user shall handle them (es. `git submodule init` and `git submodule update`).
+The CI flow manages the preparation of the `packages/` subdir but the casual user needs to explicitly take care of it (ex. using `git clone -b production https://github.com/elastic/package-storage packages/production`).
 
 ### Bot
 
