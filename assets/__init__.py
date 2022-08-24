@@ -6,33 +6,33 @@ import os
 from pathlib import Path
 
 assets_dir = Path(__file__).parent
-bases = ("production", "staging", "snapshot")
+branches = ("production", "staging", "snapshot")
 
 
 def walk():
     """
     Traverse all the local assets.
 
-    :return: generator yielding (base, package, version) of all the local assets
+    :return: generator yielding (branch, package, version) of all the local assets
     """
 
-    for base in bases:
-        for asset_base, packages, _ in os.walk(assets_dir / base):
+    for branch in branches:
+        for asset_branch, packages, _ in os.walk(assets_dir / branch):
             for package in packages:
                 if package.startswith("."):
                     continue
-                for _, versions, _ in os.walk(Path(asset_base) / package):
+                for _, versions, _ in os.walk(Path(asset_branch) / package):
                     for version in versions:
-                        yield base, package, version
+                        yield branch, package, version
                     break
             break
 
 
-def get_meta(base, package, version):
+def get_meta(branch, package, version):
     """
     Get the meta-data of a local asset.
 
-    :param base: one among 'production', 'staging', 'snapshot'
+    :param branch: one among 'production', 'staging', 'snapshot'
     :param package: package name, ex. 'endpoint'
     :param version: package version, ex. '8.3.0'
     :return: dictionary containing the meta-data
@@ -40,7 +40,7 @@ def get_meta(base, package, version):
 
     import yaml
 
-    meta_filename = assets_dir / base / package / version / "meta.yml"
+    meta_filename = assets_dir / branch / package / version / "meta.yml"
     if meta_filename.exists():
         with open(meta_filename) as f:
             return yaml.safe_load(f)
@@ -79,7 +79,7 @@ def get_remote_assets(package, repo):
 
     from github import GithubException
 
-    for branch in bases:
+    for branch in branches:
         try:
             entries = repo.get_contents(package, ref=branch)
         except GithubException:

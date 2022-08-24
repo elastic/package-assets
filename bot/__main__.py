@@ -30,29 +30,29 @@ def get_stack_version():
     return res.json()["version"]["number"]
 
 
-def make_plan(bases):
+def make_plan(branches):
     tracked_packages = config.get("tracked-packages", {})
 
     local_assets = {}
-    for base, package, version in assets.walk():
-        meta = assets.get_meta(base, package, version)
+    for branch, package, version in assets.walk():
+        meta = assets.get_meta(branch, package, version)
         if meta is not None:
-            local_assets.setdefault(package, {}).setdefault(base, {}).setdefault(version, meta)
+            local_assets.setdefault(package, {}).setdefault(branch, {}).setdefault(version, meta)
 
     remote_assets = {}
     for package in tracked_packages:
-        for base in tracked_packages[package]["branches"]:
-            package_dir = packages.packages_dir / base / "packages" / package
+        for branch in tracked_packages[package]["branches"]:
+            package_dir = packages.packages_dir / branch / "packages" / package
             if package_dir.exists():
                 for version in os.listdir(package_dir):
-                    meta = packages.get_manifest(base, package, version)
+                    meta = packages.get_manifest(branch, package, version)
                     if meta is not None:
-                        remote_assets.setdefault(package, {}).setdefault(base, {}).setdefault(version, meta)
+                        remote_assets.setdefault(package, {}).setdefault(branch, {}).setdefault(version, meta)
 
     for package in remote_assets:
-        for base in remote_assets[package]:
-            local_versions = set(local_assets.get(package, {}).get(base, {}))
-            remote_versions = set(remote_assets[package][base])
+        for branch in remote_assets[package]:
+            local_versions = set(local_assets.get(package, {}).get(branch, {}))
+            remote_versions = set(remote_assets[package][branch])
 
             min_version = tracked_packages[package].get("minimum-version", 0)
             if min_version:
@@ -62,7 +62,7 @@ def make_plan(bases):
             only_local = local_versions - remote_versions
             only_remote = remote_versions - local_versions
 
-            yield (package, base, all_versions, only_local, only_remote)
+            yield (package, branch, all_versions, only_local, only_remote)
 
 
 @click.group()
@@ -85,29 +85,29 @@ def cli(ctx, conf_file):
 @click.option("--pedantic", is_flag=True, help="Fail if something is wrong with local assets")
 def meta(ctx, pedantic):
     """ Print the meta info of all the stored assets """
-    for base, package, version in assets.walk():
-        meta = assets.get_meta(base, package, version)
+    for branch, package, version in assets.walk():
+        meta = assets.get_meta(branch, package, version)
         if meta is None:
             if pedantic:
-                click.echo(f"Missing or empty meta: assets/{base}/{package}/{version}/meta.yml", err=True)
+                click.echo(f"Missing or empty meta: assets/{branch}/{package}/{version}/meta.yml", err=True)
                 ctx.exit(1)
             continue
-        asset = dict(base=base, package=package, version=version, meta=meta)
+        asset = dict(branch=branch, package=package, version=version, meta=meta)
         click.echo(json.dumps(asset))
 
 
 @cli.command()
-@click.option("--bases", help="Comma separated list of base(s) - es: staging,snapshot")
-def plan(bases):
+@click.option("--branches", help="Comma separated list of branches - es: staging,snapshot")
+def plan(branches):
     """ Print the update plan in a diff-like format """
 
-    if bases:
-        bases = [b.strip() for b in bases.split(",")]
+    if branches:
+        branches = [b.strip() for b in branches.split(",")]
 
-    for (package, base, all_versions, only_local, only_remote) in make_plan(bases):
+    for (package, branch, all_versions, only_local, only_remote) in make_plan(branches):
         if only_local or only_remote:
-            click.echo(f"--- remote/{package}/{base}")
-            click.echo(f"+++ local/{package}/{base}")
+            click.echo(f"--- remote/{package}/{branch}")
+            click.echo(f"+++ local/{package}/{branch}")
             click.echo(f"@@ -1,{len(only_remote)} +1,{len(only_local)} @@")
 
             for version in sorted(all_versions, key=semver.VersionInfo.parse):
@@ -121,8 +121,8 @@ def plan(bases):
 
 @cli.command()
 @click.pass_context
-@click.option("--bases", help="Comma separated list of base(s) - es: staging,snapshot")
-def update(ctx, bases):
+@click.option("--branches", help="Comma separated list of branches - es: staging,snapshot")
+def update(ctx, branches):
     """ Perform the assets updates """
 
     stack_version = get_stack_version()
@@ -136,12 +136,12 @@ def update(ctx, bases):
         },
     }
 
-    if bases:
-        bases = [b.strip() for b in bases.split(",")]
+    if branches:
+        branches = [b.strip() for b in branches.split(",")]
 
-    for (package, base, all_versions, only_local, only_remote) in make_plan(bases):
+    for (package, branch, all_versions, only_local, only_remote) in make_plan(branches):
         for version in sorted(only_remote, key=semver.VersionInfo.parse):
-            package_dir = packages.packages_dir / base / "packages" / package / version
+            package_dir = packages.packages_dir / branch / "packages" / package / version
             click.echo(f"install package from {package_dir}")
             args = ["elastic-package", "install", package]
             p = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=package_dir)
@@ -151,7 +151,7 @@ def update(ctx, bases):
                 continue
             click.echo(p.stdout)
 
-            asset_dir = assets.assets_dir / base / package / version
+            asset_dir = assets.assets_dir / branch / package / version
             click.echo(f"export assets to {asset_dir}")
             args = ["elastic-package", "dump", "installed-objects", "--package", package, "--output", asset_dir]
             p = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=assets.assets_dir)
@@ -184,7 +184,7 @@ def update(ctx, bases):
             click.echo(p.stdout)
 
             click.echo(f"git: commit {asset_dir}...")
-            args = ["git", "commit", "-n", "-m", f"Add assets: {package} {version} ({base}, {stack_version})"]
+            args = ["git", "commit", "-n", "-m", f"Add assets: {package} {version} ({branch}, {stack_version})"]
             p = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=asset_dir)
             if p.returncode:
                 click.echo(p.stdout, err=True)
