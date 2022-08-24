@@ -37,7 +37,7 @@ def make_plan(bases):
     for base, package, version in assets.walk():
         meta = assets.get_meta(base, package, version)
         if meta is not None:
-            local_assets.setdefault(base, {}).setdefault(package, {}).setdefault(version, meta)
+            local_assets.setdefault(package, {}).setdefault(base, {}).setdefault(version, meta)
 
     remote_assets = {}
     for package in tracked_packages:
@@ -47,12 +47,12 @@ def make_plan(bases):
                 for version in os.listdir(package_dir):
                     meta = packages.get_manifest(base, package, version)
                     if meta is not None:
-                        remote_assets.setdefault(base, {}).setdefault(package, {}).setdefault(version, meta)
+                        remote_assets.setdefault(package, {}).setdefault(base, {}).setdefault(version, meta)
 
-    for base in remote_assets:
-        for package in remote_assets[base]:
-            local_versions = set(local_assets.get(base, {}).get(package, {}))
-            remote_versions = set(remote_assets[base][package])
+    for package in remote_assets:
+        for base in remote_assets[package]:
+            local_versions = set(local_assets.get(package, {}).get(base, {}))
+            remote_versions = set(remote_assets[package][base])
 
             min_version = tracked_packages[package].get("minimum-version", 0)
             if min_version:
@@ -62,7 +62,7 @@ def make_plan(bases):
             only_local = local_versions - remote_versions
             only_remote = remote_versions - local_versions
 
-            yield (base, package, all_versions, only_local, only_remote)
+            yield (package, base, all_versions, only_local, only_remote)
 
 
 @click.group()
@@ -104,10 +104,10 @@ def plan(bases):
     if bases:
         bases = [b.strip() for b in bases.split(",")]
 
-    for (base, package, all_versions, only_local, only_remote) in make_plan(bases):
+    for (package, base, all_versions, only_local, only_remote) in make_plan(bases):
         if only_local or only_remote:
-            click.echo(f"--- remote/{base}/{package}")
-            click.echo(f"+++ local/{base}/{package}")
+            click.echo(f"--- remote/{package}/{base}")
+            click.echo(f"+++ local/{package}/{base}")
             click.echo(f"@@ -1,{len(only_remote)} +1,{len(only_local)} @@")
 
             for version in sorted(all_versions, key=semver.VersionInfo.parse):
@@ -139,7 +139,7 @@ def update(ctx, bases):
     if bases:
         bases = [b.strip() for b in bases.split(",")]
 
-    for (base, package, all_versions, only_local, only_remote) in make_plan(bases):
+    for (package, base, all_versions, only_local, only_remote) in make_plan(bases):
         for version in sorted(only_remote, key=semver.VersionInfo.parse):
             package_dir = packages.packages_dir / base / "packages" / package / version
             click.echo(f"install package from {package_dir}")
