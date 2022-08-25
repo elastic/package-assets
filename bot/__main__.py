@@ -106,14 +106,12 @@ def plan(branches):
 
     for (package, branch, all_versions, only_local, only_remote) in make_plan(branches):
         if only_local or only_remote:
-            click.echo(f"--- remote/{package}/{branch}")
-            click.echo(f"+++ local/{package}/{branch}")
+            click.echo(f"--- local/{package}/{branch}")
+            click.echo(f"+++ remote/{package}/{branch}")
             click.echo(f"@@ -1,{len(only_remote)} +1,{len(only_local)} @@")
 
             for version in sorted(all_versions, key=semver.VersionInfo.parse):
                 if version in only_remote:
-                    click.echo(f"-{version}")
-                elif version in only_local:
                     click.echo(f"+{version}")
                 else:
                     click.echo(f" {version}")
