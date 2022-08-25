@@ -60,13 +60,7 @@ jobs:
 
       - name: Start the stack
         if: ${{ steps.update-plan.outputs.need-update == 'yes' }}
-        run: |
-          STACK_VERSION=`curl -s -H 'Accept: application/vnd.github+json' https://api.github.com/repos/elastic/elasticsearch/releases | \
-            jq -r '.[] .tag_name' | \
-            sort -V | \
-            tail -n1 | \
-            sed 's/v//'`
-          ~/go/bin/elastic-package stack up -d -v $STACK_VERSION
+        run: make stack-up ELASTIC_PACKAGE=~/go/bin/elastic-package
 
       - name: Update assets
         if: ${{ steps.update-plan.outputs.need-update == 'yes' }}
@@ -84,4 +78,4 @@ jobs:
 
       - name: Stop the stack
         if: ${{ steps.update-plan.outputs.need-update == 'yes' }}
-        run: ~/go/bin/elastic-package stack down
+        run: make stack-down ELASTIC_PACKAGE=~/go/bin/elastic-package
