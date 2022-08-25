@@ -34,6 +34,24 @@ The CI flow manages the preparation of the `packages/` subdir but the casual use
 
 The update automation is located in the `bot/` subdir.
 
+The [config.yaml](./config.yaml) file specifies what packages, versions and branches are tracked.
+
+As example, the following configuation tracks the endpoint package on all the `production`, `staging`, and `snapshot` branches but ignores versions earlier than 8.x. Zoom package is only tracked on the `production` and `staging` branches but all the versions are included.
+
+```
+tracked-packages:
+  - endpoint:
+      minimum-version: 8
+  - zoom:
+      branches:
+       - production
+       - staging
+```
+
+The bot adds new package versions as they are made available but never removes any. Ex: shifting endpoint's `minimum-version` to 9 will not delete any of the already dumped 8.x versions, it will simply ignore any new release until a 9.x is published.
+
+Therefore assets removal can only happen with `git rm <package>/<version>` in the appropriate branch or from the GitHub UI.
+
 ## Manual invocation
 
 The automation has a few dependencies, you can install them as follows:
