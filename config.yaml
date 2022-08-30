@@ -1,3 +1,17 @@
 tracked-packages:
+  - apache:
+      minimum-version: 1.3.0
   - endpoint:
       minimum-version: 8
+  - kafka:
+      minimum-version: 0.5.0
+  - mysql:
+      minimum-version: 1.1.0
+  - nginx:
+      minimum-version: 1.2.0
+  - postgresql:
+      minimum-version: 1.2.0
+  - redis:
+      minimum-version: 1.1.0
+  - system:
+      minimum-version: 1.6.4
