@@ -209,8 +209,8 @@ def download(ctx, package, output_dir):
     entries = assets.get_remote_assets(package, repo)
 
     count = 0
-    for entry, content in assets.download_assets(entries):
-        filename = entry.path.replace(package, output_dir)
+    for path, content in assets.download_assets(entries):
+        filename = path.replace(package, output_dir)
 
         Path(filename).parent.mkdir(parents=True, exist_ok=True)
         with open(filename, "wb") as f:
