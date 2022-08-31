@@ -1,0 +1,26 @@
+{
+  "description": "Pipeline for parsing redis slowlog logs",
+  "processors": [
+    {
+      "pipeline": {
+        "name": "logs-redis.slowlog@custom",
+        "ignore_missing_pipeline": true
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ],
+  "_meta": {
+    "managed_by": "fleet",
+    "managed": true,
+    "package": {
+      "name": "redis"
+    }
+  }
+}

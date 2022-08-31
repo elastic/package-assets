@@ -1,0 +1,15 @@
+{
+  "name": "metrics-redis.keyspace@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "redis"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
