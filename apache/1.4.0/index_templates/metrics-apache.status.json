@@ -1,0 +1,42 @@
+{
+  "name": "metrics-apache.status",
+  "index_template": {
+    "index_patterns": [
+      "metrics-apache.status-*"
+    ],
+    "template": {
+      "settings": {
+        "index": {
+          "default_pipeline": "metrics-apache.status-1.4.0"
+        }
+      },
+      "mappings": {
+        "_meta": {
+          "package": {
+            "name": "apache"
+          },
+          "managed_by": "fleet",
+          "managed": true
+        }
+      }
+    },
+    "composed_of": [
+      "metrics-apache.status@package",
+      "metrics-apache.status@custom",
+      ".fleet_globals-1",
+      ".fleet_agent_id_verification-1"
+    ],
+    "priority": 200,
+    "_meta": {
+      "package": {
+        "name": "apache"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    },
+    "data_stream": {
+      "hidden": false,
+      "allow_custom_routing": false
+    }
+  }
+}
