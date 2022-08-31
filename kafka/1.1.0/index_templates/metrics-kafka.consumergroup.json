@@ -1,0 +1,42 @@
+{
+  "name": "metrics-kafka.consumergroup",
+  "index_template": {
+    "index_patterns": [
+      "metrics-kafka.consumergroup-*"
+    ],
+    "template": {
+      "settings": {
+        "index": {
+          "default_pipeline": "metrics-kafka.consumergroup-1.1.0"
+        }
+      },
+      "mappings": {
+        "_meta": {
+          "package": {
+            "name": "kafka"
+          },
+          "managed_by": "fleet",
+          "managed": true
+        }
+      }
+    },
+    "composed_of": [
+      "metrics-kafka.consumergroup@package",
+      "metrics-kafka.consumergroup@custom",
+      ".fleet_globals-1",
+      ".fleet_agent_id_verification-1"
+    ],
+    "priority": 200,
+    "_meta": {
+      "package": {
+        "name": "kafka"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    },
+    "data_stream": {
+      "hidden": false,
+      "allow_custom_routing": false
+    }
+  }
+}
