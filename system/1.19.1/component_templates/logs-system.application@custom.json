@@ -1,0 +1,15 @@
+{
+  "name": "logs-system.application@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "system"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
