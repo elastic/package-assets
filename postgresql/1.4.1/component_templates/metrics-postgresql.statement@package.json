@@ -1,0 +1,414 @@
+{
+  "name": "metrics-postgresql.statement@package",
+  "component_template": {
+    "template": {
+      "settings": {
+        "index": {
+          "lifecycle": {
+            "name": "metrics"
+          },
+          "codec": "best_compression",
+          "mapping": {
+            "total_fields": {
+              "limit": "10000"
+            }
+          },
+          "query": {
+            "default_field": [
+              "cloud.account.id",
+              "cloud.availability_zone",
+              "cloud.instance.id",
+              "cloud.instance.name",
+              "cloud.machine.type",
+              "cloud.provider",
+              "cloud.region",
+              "cloud.project.id",
+              "cloud.image.id",
+              "container.id",
+              "container.image.name",
+              "container.name",
+              "host.architecture",
+              "host.domain",
+              "host.hostname",
+              "host.id",
+              "host.mac",
+              "host.name",
+              "host.os.family",
+              "host.os.kernel",
+              "host.os.name",
+              "host.os.platform",
+              "host.os.version",
+              "host.os.build",
+              "host.os.codename",
+              "host.type",
+              "ecs.version",
+              "error.message",
+              "service.address",
+              "service.type",
+              "postgresql.statement.query.text"
+            ]
+          }
+        }
+      },
+      "mappings": {
+        "dynamic_templates": [
+          {
+            "container.labels": {
+              "path_match": "container.labels.*",
+              "mapping": {
+                "type": "keyword"
+              },
+              "match_mapping_type": "string"
+            }
+          }
+        ],
+        "properties": {
+          "cloud": {
+            "properties": {
+              "availability_zone": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "image": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "instance": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "provider": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "machine": {
+                "properties": {
+                  "type": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "project": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "region": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "account": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "container": {
+            "properties": {
+              "image": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "@timestamp": {
+            "type": "date"
+          },
+          "ecs": {
+            "properties": {
+              "version": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "postgresql": {
+            "properties": {
+              "statement": {
+                "properties": {
+                  "database": {
+                    "properties": {
+                      "oid": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "query": {
+                    "properties": {
+                      "memory": {
+                        "properties": {
+                          "shared": {
+                            "properties": {
+                              "hit": {
+                                "type": "long"
+                              },
+                              "read": {
+                                "type": "long"
+                              },
+                              "dirtied": {
+                                "type": "long"
+                              },
+                              "written": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "temp": {
+                            "properties": {
+                              "read": {
+                                "type": "long"
+                              },
+                              "written": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "local": {
+                            "properties": {
+                              "hit": {
+                                "type": "long"
+                              },
+                              "read": {
+                                "type": "long"
+                              },
+                              "dirtied": {
+                                "type": "long"
+                              },
+                              "written": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "calls": {
+                        "type": "long"
+                      },
+                      "id": {
+                        "type": "long"
+                      },
+                      "text": {
+                        "ignore_above": 1024,
+                        "type": "keyword"
+                      },
+                      "time": {
+                        "properties": {
+                          "total": {
+                            "properties": {
+                              "ms": {
+                                "type": "float"
+                              }
+                            }
+                          },
+                          "min": {
+                            "properties": {
+                              "ms": {
+                                "type": "float"
+                              }
+                            }
+                          },
+                          "max": {
+                            "properties": {
+                              "ms": {
+                                "type": "float"
+                              }
+                            }
+                          },
+                          "mean": {
+                            "properties": {
+                              "ms": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "stddev": {
+                            "properties": {
+                              "ms": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "rows": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "user": {
+                    "properties": {
+                      "id": {
+                        "type": "long"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "data_stream": {
+            "properties": {
+              "namespace": {
+                "type": "constant_keyword"
+              },
+              "type": {
+                "type": "constant_keyword"
+              },
+              "dataset": {
+                "type": "constant_keyword"
+              }
+            }
+          },
+          "service": {
+            "properties": {
+              "address": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "host": {
+            "properties": {
+              "hostname": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "os": {
+                "properties": {
+                  "build": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "kernel": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "codename": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword",
+                    "fields": {
+                      "text": {
+                        "type": "text"
+                      }
+                    }
+                  },
+                  "family": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "version": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "platform": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "domain": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "ip": {
+                "type": "ip"
+              },
+              "containerized": {
+                "type": "boolean"
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "mac": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "architecture": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "event": {
+            "properties": {
+              "duration": {
+                "type": "long"
+              },
+              "module": {
+                "type": "constant_keyword",
+                "value": "postgresql"
+              },
+              "dataset": {
+                "type": "constant_keyword",
+                "value": "postgresql.statement"
+              }
+            }
+          },
+          "error": {
+            "properties": {
+              "message": {
+                "type": "match_only_text"
+              }
+            }
+          }
+        }
+      }
+    },
+    "_meta": {
+      "package": {
+        "name": "postgresql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
