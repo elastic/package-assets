@@ -1,0 +1,15 @@
+{
+  "name": "metrics-postgresql.bgwriter@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "postgresql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
