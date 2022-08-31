@@ -1,0 +1,42 @@
+{
+  "name": "metrics-postgresql.bgwriter",
+  "index_template": {
+    "index_patterns": [
+      "metrics-postgresql.bgwriter-*"
+    ],
+    "template": {
+      "settings": {
+        "index": {
+          "default_pipeline": "metrics-postgresql.bgwriter-1.4.2"
+        }
+      },
+      "mappings": {
+        "_meta": {
+          "package": {
+            "name": "postgresql"
+          },
+          "managed_by": "fleet",
+          "managed": true
+        }
+      }
+    },
+    "composed_of": [
+      "metrics-postgresql.bgwriter@package",
+      "metrics-postgresql.bgwriter@custom",
+      ".fleet_globals-1",
+      ".fleet_agent_id_verification-1"
+    ],
+    "priority": 200,
+    "_meta": {
+      "package": {
+        "name": "postgresql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    },
+    "data_stream": {
+      "hidden": false,
+      "allow_custom_routing": false
+    }
+  }
+}
