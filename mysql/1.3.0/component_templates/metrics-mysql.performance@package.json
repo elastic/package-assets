@@ -1,0 +1,156 @@
+{
+  "name": "metrics-mysql.performance@package",
+  "component_template": {
+    "template": {
+      "settings": {
+        "index": {
+          "lifecycle": {
+            "name": "metrics"
+          },
+          "codec": "best_compression",
+          "mapping": {
+            "total_fields": {
+              "limit": "10000"
+            }
+          },
+          "query": {
+            "default_field": [
+              "mysql.performance.events_statements.digest",
+              "mysql.performance.table_io_waits.object.schema",
+              "mysql.performance.table_io_waits.object.name",
+              "mysql.performance.table_io_waits.index.name"
+            ]
+          }
+        }
+      },
+      "mappings": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "data_stream": {
+            "properties": {
+              "namespace": {
+                "type": "constant_keyword"
+              },
+              "type": {
+                "type": "constant_keyword"
+              },
+              "dataset": {
+                "type": "constant_keyword"
+              }
+            }
+          },
+          "mysql": {
+            "properties": {
+              "performance": {
+                "properties": {
+                  "table_io_waits": {
+                    "properties": {
+                      "count": {
+                        "properties": {
+                          "fetch": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "index": {
+                        "properties": {
+                          "name": {
+                            "ignore_above": 1024,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "object": {
+                        "properties": {
+                          "schema": {
+                            "ignore_above": 1024,
+                            "type": "keyword"
+                          },
+                          "name": {
+                            "ignore_above": 1024,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "events_statements": {
+                    "properties": {
+                      "avg": {
+                        "properties": {
+                          "timer": {
+                            "properties": {
+                              "wait": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "last": {
+                        "properties": {
+                          "seen": {
+                            "type": "date"
+                          }
+                        }
+                      },
+                      "max": {
+                        "properties": {
+                          "timer": {
+                            "properties": {
+                              "wait": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "quantile": {
+                        "properties": {
+                          "95": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "digest": {
+                        "type": "text"
+                      },
+                      "count": {
+                        "properties": {
+                          "star": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "event": {
+            "properties": {
+              "module": {
+                "type": "constant_keyword",
+                "value": "mysql"
+              },
+              "dataset": {
+                "type": "constant_keyword",
+                "value": "mysql.performance"
+              }
+            }
+          }
+        }
+      }
+    },
+    "_meta": {
+      "package": {
+        "name": "mysql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
