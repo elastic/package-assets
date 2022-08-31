@@ -27,7 +27,8 @@ tests: tests/*.py
 sanity:
 	$(PYTHON) -m bot meta --pedantic
 	$(PYTHON) -m bot plan
-	$(PYTHON) -m bot download endpoint/1.5.0 test-download; rm -rf test-download
+	$(PYTHON) -m bot download endpoint/8.4.0 test-download
+	rm -rf test-download
 
 stack-up:
 	STACK_VERSION=`curl -s -H 'Accept: application/vnd.github+json' https://api.github.com/repos/elastic/elasticsearch/releases | \
