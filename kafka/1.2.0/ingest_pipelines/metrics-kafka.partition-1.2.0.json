@@ -1,0 +1,17 @@
+{
+  "processors": [
+    {
+      "pipeline": {
+        "name": "metrics-kafka.partition@custom",
+        "ignore_missing_pipeline": true
+      }
+    }
+  ],
+  "_meta": {
+    "managed_by": "fleet",
+    "managed": true,
+    "package": {
+      "name": "kafka"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "metrics-kafka.broker@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "kafka"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
