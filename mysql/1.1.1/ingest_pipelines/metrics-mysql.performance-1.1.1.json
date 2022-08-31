@@ -1,0 +1,17 @@
+{
+  "processors": [
+    {
+      "pipeline": {
+        "name": "metrics-mysql.performance@custom",
+        "ignore_missing_pipeline": true
+      }
+    }
+  ],
+  "_meta": {
+    "managed_by": "fleet",
+    "managed": true,
+    "package": {
+      "name": "mysql"
+    }
+  }
+}
