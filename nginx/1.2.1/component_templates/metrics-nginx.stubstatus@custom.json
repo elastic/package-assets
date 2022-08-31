@@ -1,0 +1,15 @@
+{
+  "name": "metrics-nginx.stubstatus@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "nginx"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
