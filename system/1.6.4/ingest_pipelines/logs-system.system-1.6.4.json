@@ -1,0 +1,46 @@
+{
+  "description": "Pipeline for Windows System Event Logs",
+  "processors": [
+    {
+      "set": {
+        "field": "event.ingested",
+        "value": "{{_ingest.timestamp}}"
+      }
+    },
+    {
+      "set": {
+        "field": "ecs.version",
+        "value": "1.12.0"
+      }
+    },
+    {
+      "remove": {
+        "field": "event.original",
+        "if": "ctx?.tags == null || !(ctx.tags.contains('preserve_original_event'))",
+        "ignore_failure": true,
+        "ignore_missing": true
+      }
+    },
+    {
+      "pipeline": {
+        "name": "logs-system.system@custom",
+        "ignore_missing_pipeline": true
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ],
+  "_meta": {
+    "managed_by": "fleet",
+    "managed": true,
+    "package": {
+      "name": "system"
+    }
+  }
+}
