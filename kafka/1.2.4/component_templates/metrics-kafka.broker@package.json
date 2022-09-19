@@ -1,0 +1,464 @@
+{
+  "name": "metrics-kafka.broker@package",
+  "component_template": {
+    "template": {
+      "settings": {
+        "index": {
+          "lifecycle": {
+            "name": "metrics"
+          },
+          "codec": "best_compression",
+          "mapping": {
+            "total_fields": {
+              "limit": "10000"
+            }
+          },
+          "query": {
+            "default_field": [
+              "cloud.account.id",
+              "cloud.availability_zone",
+              "cloud.instance.id",
+              "cloud.instance.name",
+              "cloud.machine.type",
+              "cloud.provider",
+              "cloud.region",
+              "cloud.project.id",
+              "cloud.image.id",
+              "container.id",
+              "container.image.name",
+              "container.name",
+              "host.architecture",
+              "host.domain",
+              "host.hostname",
+              "host.id",
+              "host.mac",
+              "host.name",
+              "host.os.family",
+              "host.os.kernel",
+              "host.os.name",
+              "host.os.platform",
+              "host.os.version",
+              "host.os.build",
+              "host.os.codename",
+              "host.type",
+              "ecs.version",
+              "service.address",
+              "service.type",
+              "kafka.broker.mbean",
+              "kafka.broker.address",
+              "kafka.topic.name",
+              "kafka.partition.topic_id",
+              "kafka.partition.topic_broker_id"
+            ]
+          }
+        }
+      },
+      "mappings": {
+        "dynamic_templates": [
+          {
+            "container.labels": {
+              "path_match": "container.labels.*",
+              "mapping": {
+                "type": "keyword"
+              },
+              "match_mapping_type": "string"
+            }
+          }
+        ],
+        "properties": {
+          "cloud": {
+            "properties": {
+              "availability_zone": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "image": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "instance": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "provider": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "machine": {
+                "properties": {
+                  "type": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "project": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "region": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "account": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "container": {
+            "properties": {
+              "image": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "@timestamp": {
+            "type": "date"
+          },
+          "ecs": {
+            "properties": {
+              "version": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "data_stream": {
+            "properties": {
+              "namespace": {
+                "type": "constant_keyword"
+              },
+              "type": {
+                "type": "constant_keyword"
+              },
+              "dataset": {
+                "type": "constant_keyword"
+              }
+            }
+          },
+          "service": {
+            "properties": {
+              "address": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "kafka": {
+            "properties": {
+              "partition": {
+                "properties": {
+                  "id": {
+                    "type": "long"
+                  },
+                  "topic_id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "topic_broker_id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "topic": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "error": {
+                    "properties": {
+                      "code": {
+                        "type": "long"
+                      }
+                    }
+                  }
+                }
+              },
+              "broker": {
+                "properties": {
+                  "replication": {
+                    "properties": {
+                      "unclean_leader_elections": {
+                        "type": "float"
+                      },
+                      "leader_elections": {
+                        "type": "float"
+                      }
+                    }
+                  },
+                  "request": {
+                    "properties": {
+                      "fetch": {
+                        "properties": {
+                          "failed_per_second": {
+                            "type": "float"
+                          },
+                          "failed": {
+                            "type": "float"
+                          }
+                        }
+                      },
+                      "channel": {
+                        "properties": {
+                          "queue": {
+                            "properties": {
+                              "size": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "produce": {
+                        "properties": {
+                          "failed_per_second": {
+                            "type": "float"
+                          },
+                          "failed": {
+                            "type": "float"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mbean": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "address": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "log": {
+                    "properties": {
+                      "flush_rate": {
+                        "type": "float"
+                      }
+                    }
+                  },
+                  "session": {
+                    "properties": {
+                      "zookeeper": {
+                        "properties": {
+                          "disconnect": {
+                            "type": "float"
+                          },
+                          "readonly": {
+                            "type": "float"
+                          },
+                          "expire": {
+                            "type": "float"
+                          },
+                          "sync": {
+                            "type": "float"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "topic": {
+                    "properties": {
+                      "messages_in": {
+                        "type": "float"
+                      },
+                      "net": {
+                        "properties": {
+                          "in": {
+                            "properties": {
+                              "bytes_per_sec": {
+                                "type": "float"
+                              }
+                            }
+                          },
+                          "rejected": {
+                            "properties": {
+                              "bytes_per_sec": {
+                                "type": "float"
+                              }
+                            }
+                          },
+                          "out": {
+                            "properties": {
+                              "bytes_per_sec": {
+                                "type": "float"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "messages_in": {
+                    "type": "float"
+                  },
+                  "id": {
+                    "type": "long"
+                  },
+                  "net": {
+                    "properties": {
+                      "in": {
+                        "properties": {
+                          "bytes_per_sec": {
+                            "type": "float"
+                          }
+                        }
+                      },
+                      "rejected": {
+                        "properties": {
+                          "bytes_per_sec": {
+                            "type": "float"
+                          }
+                        }
+                      },
+                      "out": {
+                        "properties": {
+                          "bytes_per_sec": {
+                            "type": "float"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "host": {
+            "properties": {
+              "hostname": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "os": {
+                "properties": {
+                  "build": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "kernel": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "codename": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword",
+                    "fields": {
+                      "text": {
+                        "type": "text"
+                      }
+                    }
+                  },
+                  "family": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "version": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "platform": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "domain": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "ip": {
+                "type": "ip"
+              },
+              "containerized": {
+                "type": "boolean"
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "mac": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "architecture": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "event": {
+            "properties": {
+              "module": {
+                "type": "constant_keyword",
+                "value": "kafka"
+              },
+              "dataset": {
+                "type": "constant_keyword",
+                "value": "kafka.broker"
+              }
+            }
+          }
+        }
+      }
+    },
+    "_meta": {
+      "package": {
+        "name": "kafka"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
