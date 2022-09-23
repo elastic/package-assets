@@ -52,9 +52,16 @@ jobs:
             fi
           )"
 
+      - name: Install Go
+        uses: actions/setup-go@v3
+        if: ${{ steps.update-plan.outputs.need-update == 'yes' }}
+        with:
+          go-version: '>=1.19.1'
+
       - name: Install elastic-package
         if: ${{ steps.update-plan.outputs.need-update == 'yes' }}
         run: |
+          go version
           go install github.com/elastic/elastic-package@latest
           ~/go/bin/elastic-package version
 
