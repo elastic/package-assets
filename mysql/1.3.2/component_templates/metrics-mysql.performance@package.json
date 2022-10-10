@@ -1,0 +1,166 @@
+{
+  "name": "metrics-mysql.performance@package",
+  "component_template": {
+    "template": {
+      "settings": {
+        "index": {
+          "lifecycle": {
+            "name": "metrics"
+          },
+          "codec": "best_compression",
+          "mapping": {
+            "total_fields": {
+              "limit": "10000"
+            }
+          },
+          "query": {
+            "default_field": [
+              "ecs.version",
+              "service.address",
+              "service.type",
+              "mysql.performance.table_io_waits.object.schema",
+              "mysql.performance.table_io_waits.object.name",
+              "mysql.performance.table_io_waits.index.name"
+            ]
+          }
+        }
+      },
+      "mappings": {
+        "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "ecs": {
+            "properties": {
+              "version": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "data_stream": {
+            "properties": {
+              "namespace": {
+                "type": "constant_keyword"
+              },
+              "type": {
+                "type": "constant_keyword"
+              },
+              "dataset": {
+                "type": "constant_keyword"
+              }
+            }
+          },
+          "service": {
+            "properties": {
+              "address": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "mysql": {
+            "properties": {
+              "performance": {
+                "properties": {
+                  "table_io_waits": {
+                    "properties": {
+                      "count": {
+                        "properties": {
+                          "fetch": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "index": {
+                        "properties": {
+                          "name": {
+                            "ignore_above": 1024,
+                            "type": "keyword"
+                          }
+                        }
+                      },
+                      "object": {
+                        "properties": {
+                          "schema": {
+                            "ignore_above": 1024,
+                            "type": "keyword"
+                          },
+                          "name": {
+                            "ignore_above": 1024,
+                            "type": "keyword"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "events_statements": {
+                    "properties": {
+                      "avg": {
+                        "properties": {
+                          "timer": {
+                            "properties": {
+                              "wait": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "last": {
+                        "properties": {
+                          "seen": {
+                            "type": "date"
+                          }
+                        }
+                      },
+                      "max": {
+                        "properties": {
+                          "timer": {
+                            "properties": {
+                              "wait": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "quantile": {
+                        "properties": {
+                          "95": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "digest": {
+                        "type": "flattened"
+                      },
+                      "count": {
+                        "properties": {
+                          "star": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "_meta": {
+      "package": {
+        "name": "mysql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}

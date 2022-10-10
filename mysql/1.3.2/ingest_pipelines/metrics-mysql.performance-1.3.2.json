@@ -1,0 +1,33 @@
+{
+  "description": "Pipeline for parsing MySQL performance metrics",
+  "processors": [
+    {
+      "gsub": {
+        "field": "mysql.performance.events_statements.last.seen",
+        "pattern": " ",
+        "replacement": "T"
+      }
+    },
+    {
+      "pipeline": {
+        "name": "metrics-mysql.performance@custom",
+        "ignore_missing_pipeline": true
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ],
+  "_meta": {
+    "managed_by": "fleet",
+    "managed": true,
+    "package": {
+      "name": "mysql"
+    }
+  }
+}
