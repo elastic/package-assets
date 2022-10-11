@@ -1,0 +1,15 @@
+{
+  "name": "logs-mysql.error@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "mysql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}

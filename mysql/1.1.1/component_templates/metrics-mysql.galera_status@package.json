@@ -1,0 +1,465 @@
+{
+  "name": "metrics-mysql.galera_status@package",
+  "component_template": {
+    "template": {
+      "settings": {
+        "index": {
+          "lifecycle": {
+            "name": "metrics"
+          },
+          "codec": "best_compression",
+          "mapping": {
+            "total_fields": {
+              "limit": "10000"
+            }
+          },
+          "query": {
+            "default_field": [
+              "cloud.account.id",
+              "cloud.availability_zone",
+              "cloud.instance.id",
+              "cloud.instance.name",
+              "cloud.machine.type",
+              "cloud.provider",
+              "cloud.region",
+              "cloud.project.id",
+              "cloud.image.id",
+              "container.id",
+              "container.image.name",
+              "container.name",
+              "host.architecture",
+              "host.domain",
+              "host.hostname",
+              "host.id",
+              "host.mac",
+              "host.name",
+              "host.os.family",
+              "host.os.kernel",
+              "host.os.name",
+              "host.os.platform",
+              "host.os.version",
+              "host.os.build",
+              "host.os.codename",
+              "host.type",
+              "ecs.version",
+              "service.address",
+              "service.type",
+              "mysql.galera_status.cluster.status",
+              "mysql.galera_status.connected",
+              "mysql.galera_status.evs.evict",
+              "mysql.galera_status.evs.state",
+              "mysql.galera_status.local.state",
+              "mysql.galera_status.ready"
+            ]
+          }
+        }
+      },
+      "mappings": {
+        "dynamic_templates": [
+          {
+            "container.labels": {
+              "path_match": "container.labels.*",
+              "mapping": {
+                "type": "keyword"
+              },
+              "match_mapping_type": "string"
+            }
+          }
+        ],
+        "properties": {
+          "cloud": {
+            "properties": {
+              "availability_zone": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "image": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "instance": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "provider": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "machine": {
+                "properties": {
+                  "type": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "project": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "region": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "account": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "container": {
+            "properties": {
+              "image": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "@timestamp": {
+            "type": "date"
+          },
+          "ecs": {
+            "properties": {
+              "version": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "data_stream": {
+            "properties": {
+              "namespace": {
+                "type": "constant_keyword"
+              },
+              "type": {
+                "type": "constant_keyword"
+              },
+              "dataset": {
+                "type": "constant_keyword"
+              }
+            }
+          },
+          "service": {
+            "properties": {
+              "address": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "host": {
+            "properties": {
+              "hostname": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "os": {
+                "properties": {
+                  "build": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "kernel": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "codename": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword",
+                    "fields": {
+                      "text": {
+                        "type": "text"
+                      }
+                    }
+                  },
+                  "family": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "version": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "platform": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "domain": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "ip": {
+                "type": "ip"
+              },
+              "containerized": {
+                "type": "boolean"
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "mac": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "architecture": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "mysql": {
+            "properties": {
+              "galera_status": {
+                "properties": {
+                  "connected": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "cluster": {
+                    "properties": {
+                      "size": {
+                        "type": "long"
+                      },
+                      "conf_id": {
+                        "type": "long"
+                      },
+                      "status": {
+                        "ignore_above": 1024,
+                        "type": "keyword"
+                      }
+                    }
+                  },
+                  "evs": {
+                    "properties": {
+                      "state": {
+                        "ignore_above": 1024,
+                        "type": "keyword"
+                      },
+                      "evict": {
+                        "ignore_above": 1024,
+                        "type": "keyword"
+                      }
+                    }
+                  },
+                  "apply": {
+                    "properties": {
+                      "oooe": {
+                        "type": "double"
+                      },
+                      "oool": {
+                        "type": "double"
+                      },
+                      "window": {
+                        "type": "double"
+                      }
+                    }
+                  },
+                  "flow_ctl": {
+                    "properties": {
+                      "paused_ns": {
+                        "type": "long"
+                      },
+                      "paused": {
+                        "type": "double"
+                      },
+                      "recv": {
+                        "type": "long"
+                      },
+                      "sent": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "ready": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "last_committed": {
+                    "type": "long"
+                  },
+                  "commit": {
+                    "properties": {
+                      "oooe": {
+                        "type": "double"
+                      },
+                      "window": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "cert": {
+                    "properties": {
+                      "index_size": {
+                        "type": "long"
+                      },
+                      "deps_distance": {
+                        "type": "double"
+                      },
+                      "interval": {
+                        "type": "double"
+                      }
+                    }
+                  },
+                  "received": {
+                    "properties": {
+                      "bytes": {
+                        "type": "long"
+                      },
+                      "count": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "repl": {
+                    "properties": {
+                      "keys": {
+                        "type": "long"
+                      },
+                      "bytes": {
+                        "type": "long"
+                      },
+                      "keys_bytes": {
+                        "type": "long"
+                      },
+                      "count": {
+                        "type": "long"
+                      },
+                      "other_bytes": {
+                        "type": "long"
+                      },
+                      "data_bytes": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "local": {
+                    "properties": {
+                      "replays": {
+                        "type": "long"
+                      },
+                      "recv": {
+                        "properties": {
+                          "queue_max": {
+                            "type": "long"
+                          },
+                          "queue_avg": {
+                            "type": "double"
+                          },
+                          "queue_min": {
+                            "type": "long"
+                          },
+                          "queue": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "bf_aborts": {
+                        "type": "long"
+                      },
+                      "commits": {
+                        "type": "long"
+                      },
+                      "cert_failures": {
+                        "type": "long"
+                      },
+                      "state": {
+                        "ignore_above": 1024,
+                        "type": "keyword"
+                      },
+                      "send": {
+                        "properties": {
+                          "queue_max": {
+                            "type": "long"
+                          },
+                          "queue_avg": {
+                            "type": "double"
+                          },
+                          "queue_min": {
+                            "type": "long"
+                          },
+                          "queue": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "event": {
+            "properties": {
+              "module": {
+                "type": "constant_keyword",
+                "value": "mysql"
+              },
+              "dataset": {
+                "type": "constant_keyword",
+                "value": "mysql.galera_status"
+              }
+            }
+          }
+        }
+      }
+    },
+    "_meta": {
+      "package": {
+        "name": "mysql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
