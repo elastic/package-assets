@@ -1,0 +1,629 @@
+{
+  "name": "metrics-mysql.status@package",
+  "component_template": {
+    "template": {
+      "settings": {
+        "index": {
+          "lifecycle": {
+            "name": "metrics"
+          },
+          "codec": "best_compression",
+          "mapping": {
+            "total_fields": {
+              "limit": "10000"
+            }
+          },
+          "query": {
+            "default_field": [
+              "cloud.account.id",
+              "cloud.availability_zone",
+              "cloud.instance.id",
+              "cloud.instance.name",
+              "cloud.machine.type",
+              "cloud.provider",
+              "cloud.region",
+              "cloud.project.id",
+              "cloud.image.id",
+              "container.id",
+              "container.image.name",
+              "container.name",
+              "host.architecture",
+              "host.domain",
+              "host.hostname",
+              "host.id",
+              "host.mac",
+              "host.name",
+              "host.os.family",
+              "host.os.kernel",
+              "host.os.name",
+              "host.os.platform",
+              "host.os.version",
+              "host.os.build",
+              "host.os.codename",
+              "host.type",
+              "ecs.version",
+              "service.address",
+              "service.type"
+            ]
+          }
+        }
+      },
+      "mappings": {
+        "dynamic_templates": [
+          {
+            "container.labels": {
+              "path_match": "container.labels.*",
+              "mapping": {
+                "type": "keyword"
+              },
+              "match_mapping_type": "string"
+            }
+          }
+        ],
+        "properties": {
+          "cloud": {
+            "properties": {
+              "availability_zone": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "image": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "instance": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "provider": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "machine": {
+                "properties": {
+                  "type": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "project": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "region": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "account": {
+                "properties": {
+                  "id": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              }
+            }
+          },
+          "container": {
+            "properties": {
+              "image": {
+                "properties": {
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "@timestamp": {
+            "type": "date"
+          },
+          "ecs": {
+            "properties": {
+              "version": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "data_stream": {
+            "properties": {
+              "namespace": {
+                "type": "constant_keyword"
+              },
+              "type": {
+                "type": "constant_keyword"
+              },
+              "dataset": {
+                "type": "constant_keyword"
+              }
+            }
+          },
+          "service": {
+            "properties": {
+              "address": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "host": {
+            "properties": {
+              "hostname": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "os": {
+                "properties": {
+                  "build": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "kernel": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "codename": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "name": {
+                    "ignore_above": 1024,
+                    "type": "keyword",
+                    "fields": {
+                      "text": {
+                        "type": "text"
+                      }
+                    }
+                  },
+                  "family": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "version": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  },
+                  "platform": {
+                    "ignore_above": 1024,
+                    "type": "keyword"
+                  }
+                }
+              },
+              "domain": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "ip": {
+                "type": "ip"
+              },
+              "containerized": {
+                "type": "boolean"
+              },
+              "name": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "id": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "type": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "mac": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              },
+              "architecture": {
+                "ignore_above": 1024,
+                "type": "keyword"
+              }
+            }
+          },
+          "mysql": {
+            "properties": {
+              "status": {
+                "properties": {
+                  "flush_commands": {
+                    "type": "long"
+                  },
+                  "handler": {
+                    "properties": {
+                      "rollback": {
+                        "type": "long"
+                      },
+                      "prepare": {
+                        "type": "long"
+                      },
+                      "read": {
+                        "properties": {
+                          "next": {
+                            "type": "long"
+                          },
+                          "last": {
+                            "type": "long"
+                          },
+                          "prev": {
+                            "type": "long"
+                          },
+                          "rnd": {
+                            "type": "long"
+                          },
+                          "rnd_next": {
+                            "type": "long"
+                          },
+                          "first": {
+                            "type": "long"
+                          },
+                          "key": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "savepoint": {
+                        "type": "long"
+                      },
+                      "commit": {
+                        "type": "long"
+                      },
+                      "mrr_init": {
+                        "type": "long"
+                      },
+                      "update": {
+                        "type": "long"
+                      },
+                      "delete": {
+                        "type": "long"
+                      },
+                      "savepoint_rollback": {
+                        "type": "long"
+                      },
+                      "write": {
+                        "type": "long"
+                      },
+                      "external_lock": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "cache": {
+                    "properties": {
+                      "ssl": {
+                        "properties": {
+                          "hits": {
+                            "type": "long"
+                          },
+                          "size": {
+                            "type": "long"
+                          },
+                          "misses": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "table": {
+                        "properties": {
+                          "open_cache": {
+                            "properties": {
+                              "hits": {
+                                "type": "long"
+                              },
+                              "overflows": {
+                                "type": "long"
+                              },
+                              "misses": {
+                                "type": "long"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "aborted": {
+                    "properties": {
+                      "clients": {
+                        "type": "long"
+                      },
+                      "connects": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "created": {
+                    "properties": {
+                      "tmp": {
+                        "properties": {
+                          "tables": {
+                            "type": "long"
+                          },
+                          "files": {
+                            "type": "long"
+                          },
+                          "disk_tables": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "questions": {
+                    "type": "long"
+                  },
+                  "threads": {
+                    "properties": {
+                      "connected": {
+                        "type": "long"
+                      },
+                      "running": {
+                        "type": "long"
+                      },
+                      "created": {
+                        "type": "long"
+                      },
+                      "cached": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "delayed": {
+                    "properties": {
+                      "insert_threads": {
+                        "type": "long"
+                      },
+                      "writes": {
+                        "type": "long"
+                      },
+                      "errors": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "max_used_connections": {
+                    "type": "long"
+                  },
+                  "innodb": {
+                    "properties": {
+                      "rows": {
+                        "properties": {
+                          "inserted": {
+                            "type": "long"
+                          },
+                          "deleted": {
+                            "type": "long"
+                          },
+                          "reads": {
+                            "type": "long"
+                          },
+                          "updated": {
+                            "type": "long"
+                          }
+                        }
+                      },
+                      "buffer_pool": {
+                        "properties": {
+                          "pages": {
+                            "properties": {
+                              "dirty": {
+                                "type": "long"
+                              },
+                              "total": {
+                                "type": "long"
+                              },
+                              "data": {
+                                "type": "long"
+                              },
+                              "latched": {
+                                "type": "long"
+                              },
+                              "free": {
+                                "type": "long"
+                              },
+                              "flushed": {
+                                "type": "long"
+                              },
+                              "misc": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "read": {
+                            "properties": {
+                              "ahead": {
+                                "type": "long"
+                              },
+                              "ahead_evicted": {
+                                "type": "long"
+                              },
+                              "ahead_rnd": {
+                                "type": "long"
+                              },
+                              "requests": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "dump_status": {
+                            "type": "long"
+                          },
+                          "bytes": {
+                            "properties": {
+                              "dirty": {
+                                "type": "long"
+                              },
+                              "data": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "pool": {
+                            "properties": {
+                              "resize_status": {
+                                "type": "long"
+                              },
+                              "reads": {
+                                "type": "long"
+                              },
+                              "wait_free": {
+                                "type": "long"
+                              }
+                            }
+                          },
+                          "write_requests": {
+                            "type": "long"
+                          },
+                          "load_status": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "binlog": {
+                    "properties": {
+                      "cache": {
+                        "properties": {
+                          "disk_use": {
+                            "type": "long"
+                          },
+                          "use": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "queries": {
+                    "type": "long"
+                  },
+                  "command": {
+                    "properties": {
+                      "select": {
+                        "type": "long"
+                      },
+                      "insert": {
+                        "type": "long"
+                      },
+                      "update": {
+                        "type": "long"
+                      },
+                      "delete": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "bytes": {
+                    "properties": {
+                      "received": {
+                        "type": "long"
+                      },
+                      "sent": {
+                        "type": "long"
+                      }
+                    }
+                  },
+                  "opened_tables": {
+                    "type": "long"
+                  },
+                  "connection": {
+                    "properties": {
+                      "errors": {
+                        "properties": {
+                          "internal": {
+                            "type": "long"
+                          },
+                          "select": {
+                            "type": "long"
+                          },
+                          "max": {
+                            "type": "long"
+                          },
+                          "peer_address": {
+                            "type": "long"
+                          },
+                          "accept": {
+                            "type": "long"
+                          },
+                          "tcpwrap": {
+                            "type": "long"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "connections": {
+                    "type": "long"
+                  },
+                  "open": {
+                    "properties": {
+                      "tables": {
+                        "type": "long"
+                      },
+                      "streams": {
+                        "type": "long"
+                      },
+                      "files": {
+                        "type": "long"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "event": {
+            "properties": {
+              "module": {
+                "type": "constant_keyword",
+                "value": "mysql"
+              },
+              "dataset": {
+                "type": "constant_keyword",
+                "value": "mysql.status"
+              }
+            }
+          }
+        }
+      }
+    },
+    "_meta": {
+      "package": {
+        "name": "mysql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}

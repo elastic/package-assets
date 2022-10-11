@@ -1,0 +1,42 @@
+{
+  "name": "metrics-mysql.performance",
+  "index_template": {
+    "index_patterns": [
+      "metrics-mysql.performance-*"
+    ],
+    "template": {
+      "settings": {
+        "index": {
+          "default_pipeline": "metrics-mysql.performance-1.3.0"
+        }
+      },
+      "mappings": {
+        "_meta": {
+          "package": {
+            "name": "mysql"
+          },
+          "managed_by": "fleet",
+          "managed": true
+        }
+      }
+    },
+    "composed_of": [
+      "metrics-mysql.performance@package",
+      "metrics-mysql.performance@custom",
+      ".fleet_globals-1",
+      ".fleet_agent_id_verification-1"
+    ],
+    "priority": 200,
+    "_meta": {
+      "package": {
+        "name": "mysql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    },
+    "data_stream": {
+      "hidden": false,
+      "allow_custom_routing": false
+    }
+  }
+}
