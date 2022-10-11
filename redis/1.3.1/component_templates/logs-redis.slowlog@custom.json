@@ -1,0 +1,15 @@
+{
+  "name": "logs-redis.slowlog@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "redis"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
