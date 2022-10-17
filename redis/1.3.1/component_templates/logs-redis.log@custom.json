@@ -1,0 +1,15 @@
+{
+  "name": "logs-redis.log@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "redis"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
