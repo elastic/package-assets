@@ -1,0 +1,38 @@
+{
+  "description": "Pipeline for Windows Application Event Logs",
+  "processors": [
+    {
+      "set": {
+        "field": "event.ingested",
+        "value": "{{_ingest.timestamp}}"
+      }
+    },
+    {
+      "set": {
+        "field": "ecs.version",
+        "value": "8.0.0"
+      }
+    },
+    {
+      "pipeline": {
+        "name": "logs-system.application@custom",
+        "ignore_missing_pipeline": true
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ],
+  "_meta": {
+    "managed_by": "fleet",
+    "managed": true,
+    "package": {
+      "name": "system"
+    }
+  }
+}
