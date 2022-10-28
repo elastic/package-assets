@@ -1,0 +1,42 @@
+{
+  "name": "logs-system.auth",
+  "index_template": {
+    "index_patterns": [
+      "logs-system.auth-*"
+    ],
+    "template": {
+      "settings": {
+        "index": {
+          "default_pipeline": "logs-system.auth-1.20.4"
+        }
+      },
+      "mappings": {
+        "_meta": {
+          "package": {
+            "name": "system"
+          },
+          "managed_by": "fleet",
+          "managed": true
+        }
+      }
+    },
+    "composed_of": [
+      "logs-system.auth@package",
+      "logs-system.auth@custom",
+      ".fleet_globals-1",
+      ".fleet_agent_id_verification-1"
+    ],
+    "priority": 200,
+    "_meta": {
+      "package": {
+        "name": "system"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    },
+    "data_stream": {
+      "hidden": false,
+      "allow_custom_routing": false
+    }
+  }
+}
