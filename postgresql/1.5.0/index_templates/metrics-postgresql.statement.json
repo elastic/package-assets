@@ -1,0 +1,42 @@
+{
+  "name": "metrics-postgresql.statement",
+  "index_template": {
+    "index_patterns": [
+      "metrics-postgresql.statement-*"
+    ],
+    "template": {
+      "settings": {
+        "index": {
+          "default_pipeline": "metrics-postgresql.statement-1.5.0"
+        }
+      },
+      "mappings": {
+        "_meta": {
+          "package": {
+            "name": "postgresql"
+          },
+          "managed_by": "fleet",
+          "managed": true
+        }
+      }
+    },
+    "composed_of": [
+      "metrics-postgresql.statement@package",
+      "metrics-postgresql.statement@custom",
+      ".fleet_globals-1",
+      ".fleet_agent_id_verification-1"
+    ],
+    "priority": 200,
+    "_meta": {
+      "package": {
+        "name": "postgresql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    },
+    "data_stream": {
+      "hidden": false,
+      "allow_custom_routing": false
+    }
+  }
+}

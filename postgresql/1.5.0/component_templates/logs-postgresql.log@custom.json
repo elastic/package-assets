@@ -1,0 +1,15 @@
+{
+  "name": "logs-postgresql.log@custom",
+  "component_template": {
+    "template": {
+      "settings": {}
+    },
+    "_meta": {
+      "package": {
+        "name": "postgresql"
+      },
+      "managed_by": "fleet",
+      "managed": true
+    }
+  }
+}
